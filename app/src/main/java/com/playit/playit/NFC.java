@@ -7,48 +7,35 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
-public class MainActivity extends ActionBarActivity {
+public class NFC extends ActionBarActivity {
 
-
-    //TextView t;
     private Button b;
-    private EditText user, pass;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_nfc);
 
-        user = (EditText)findViewById(R.id.editText1);
-        pass = (EditText)findViewById(R.id.editText2);
 
-        b = (Button)findViewById(R.id.button1);
+        b = (Button)findViewById(R.id.autenticar);
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!user.getText().toString().equals("") && !pass.getText().toString().equals("")) {
-                    Intent i = new Intent(getApplicationContext(), Profile.class);
-                    startActivity(i);
-                }
-                else {
-                    Toast t = Toast.makeText(getApplicationContext(), "Bad Log In", Toast.LENGTH_SHORT);
-                    t.show();
-                }
+                Intent i = new Intent(getApplicationContext(), Sesion.class);
+                startActivity(i);
             }
         });
-        /*t = (TextView)findViewById(R.id.textView1);
-        t.setText("Hola");*/
+
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_nfc, menu);
         return true;
     }
 

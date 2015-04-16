@@ -17,8 +17,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity2"
+            android:name=".Profile"
             android:label="@string/title_activity_main_activity2" >
+        </activity>
+        <activity
+            android:name=".NFC"
+            android:label="@string/title_activity_nfc" >
+        </activity>
+        <activity
+            android:name=".Sesion"
+            android:label="@string/title_activity_sesion" >
         </activity>
     </application>
 

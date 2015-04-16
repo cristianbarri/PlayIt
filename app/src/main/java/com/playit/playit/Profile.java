@@ -1,5 +1,8 @@
 package com.playit.playit;
 
+
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,14 +10,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity2 extends ActionBarActivity {
+public class Profile extends ActionBarActivity {
 
 
+    private Button b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_activity2);
+        setContentView(R.layout.activity_profile);
+
+        b = (Button)findViewById(R.id.cambioDeFragment);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), NFC.class);
+                startActivity(i);
+            }
+        });
 
     }
 
@@ -22,7 +35,7 @@ public class MainActivity2 extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main_activity2, menu);
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
 
