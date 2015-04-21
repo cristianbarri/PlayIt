@@ -11,5 +11,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_nfc">NFC</string>
     <string name="title_activity_sesion">Sesion</string>
+    <string name="title_activity_profile_swipe">ProfileSwipe</string>
 
 </resources>

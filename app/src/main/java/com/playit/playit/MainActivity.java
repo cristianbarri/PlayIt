@@ -37,47 +37,14 @@ public class MainActivity extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                String dbName = "playit.cafywfvb4krw.eu-central-1.rds.amazonaws.com:3306/PlayItDB";
-                String hostname = System.getProperty("RDS_HOSTNAME");
-                String port = System.getProperty("RDS_PORT");
-                String jdbcUrl = "jdbc:mysql://" + dbName + "?user=" + "root" + "&password=" + "toortoor";
-                String userbd = null;
-                String passbd = null;
-
-
-                try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                    Connection conn = DriverManager.getConnection(jdbcUrl);
-                    Statement readStatement = conn.createStatement();
-                    ResultSet resultSet = readStatement.executeQuery("SELECT * FROM Persons where Name = '"+user.toString()+"';");
-                    resultSet.first();
-                    userbd = resultSet.getString("Name");
-                    passbd = resultSet.getString("Password");
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-
-
-
-                if (user.toString().equals(userbd) && pass.toString().equals(passbd)) {
-                    Intent i = new Intent(getApplicationContext(), Profile.class);
-                    startActivity(i);
-                } else {
-                    Toast t = Toast.makeText(getApplicationContext(), "Bad Log In" + userbd + " " + passbd, Toast.LENGTH_SHORT);
-                    t.show();
-                }
-/*
                 if(!user.toString().equals("") && !pass.getText().toString().equals("")) {
-                    Intent i = new Intent(getApplicationContext(), Profile.class);
+                    Intent i = new Intent(getApplicationContext(), ProfileSwipe.class);
                     startActivity(i);
                 }
                 else {
                     Toast t = Toast.makeText(getApplicationContext(), "Bad Log In", Toast.LENGTH_SHORT);
                     t.show();
-                }*/
+                }
             }
         });
         /*t = (TextView)findViewById(R.id.textView1);

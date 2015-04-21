@@ -1,7 +1,8 @@
-package com.playit.playit;
+/*package com.playit.playit;
 
 
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,7 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-public class Profile extends ActionBarActivity {
+public class Profile extends Fragment {
 
 
     private Button b;
@@ -18,16 +19,16 @@ public class Profile extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        //setContentView(R.layout.activity_profile);
 
-        b = (Button)findViewById(R.id.cambioDeFragment);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), NFC.class);
-                startActivity(i);
-            }
-        });
+        //b = (Button)findViewById(R.id.cambioDeFragment);
+        //b.setOnClickListener(new View.OnClickListener() {
+          //  @Override
+            //public void onClick(View v) {
+        //        Intent i = new Intent(getApplicationContext(), NFC.class);
+              //  startActivity(i);
+            //}
+        //});
 
     }
 
@@ -35,7 +36,7 @@ public class Profile extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        //getMenuInflater().inflate(R.menu.menu_profile, menu);
         return true;
     }
 
@@ -54,3 +55,4 @@ public class Profile extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+*/
