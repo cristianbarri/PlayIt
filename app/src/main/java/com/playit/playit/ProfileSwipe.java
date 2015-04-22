@@ -119,6 +119,7 @@ public class ProfileSwipe extends FragmentActivity implements ActionBar.TabListe
 }
 */
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -128,18 +129,30 @@ import com.playit.playit.tabswipe.*;
 
 import com.playit.playit.R;
 
-public class ProfileSwipe extends ActionBarActivity {
+public class ProfileSwipe extends ActionBarActivity implements Profile1.OnFragmentInteractionListener, Stats1.OnFragmentInteractionListener, Stats2.OnFragmentInteractionListener/*, NavigationDrawerFragment.NavigationDrawerCallbacks*/{
+
+    //SectionsPagerAdapter mSectionsPagerAdapter;
+    SlidingTabLayout mSlidingTabLayout;
+    ViewPager pager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_swipe);
 
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+
+        pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new TabsPagerAdapter(getSupportFragmentManager()));
 
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(pager);
+        /*PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(pager);*/
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabs);
+        mSlidingTabLayout.setViewPager(pager);
     }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }

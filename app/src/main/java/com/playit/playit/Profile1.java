@@ -73,7 +73,7 @@ public class Profile1 extends android.support.v4.app.Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-/*
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -83,7 +83,7 @@ public class Profile1 extends android.support.v4.app.Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }*/
+    }
 
     @Override
     public void onDetach() {
