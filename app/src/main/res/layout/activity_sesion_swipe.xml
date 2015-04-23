@@ -5,15 +5,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <com.playit.playit.tabswipe.SlidingTabLayout
-        android:id="@+id/tabsProfileSwipe"
+        android:id="@+id/tabsSesionSwipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pagerProfileSwipe"
+        android:id="@+id/pagerSesionSwipe"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
 
-    </LinearLayout>
+</LinearLayout>

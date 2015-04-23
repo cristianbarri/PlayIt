@@ -31,6 +31,10 @@
             android:name=".ProfileSwipe"
             android:label="@string/title_activity_profile_swipe" >
         </activity>
+        <activity
+            android:name=".SesionSwipe"
+            android:label="@string/title_activity_sesion_swipe" >
+        </activity>
     </application>
 
 </manifest>

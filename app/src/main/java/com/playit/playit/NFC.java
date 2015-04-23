@@ -51,7 +51,7 @@ public class NFC extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), Sesion.class);
+                Intent i = new Intent(getApplicationContext(), SesionSwipe.class);
                 startActivity(i);
             }
         });

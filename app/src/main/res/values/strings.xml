@@ -12,5 +12,6 @@
     <string name="title_activity_nfc">NFC</string>
     <string name="title_activity_sesion">Sesion</string>
     <string name="title_activity_profile_swipe">ProfileSwipe</string>
+    <string name="title_activity_sesion_swipe">SesionSwipe</string>
 
 </resources>
