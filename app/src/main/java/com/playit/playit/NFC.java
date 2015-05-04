@@ -161,7 +161,7 @@ ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
                 Intent i = new Intent(getApplicationContext(), SesionSwipe.class);
                 startActivity(i);
             }
-            else Toast.makeText(this, "This NFC TAG aren't valid for this session.", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(this, "This NFC TAG isn't valid for this session.", Toast.LENGTH_SHORT).show();
         }
     }
 
