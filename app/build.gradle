@@ -24,4 +24,8 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile files('/Users/marcfernandezantolin/AndroidStudioProjects/PlayIt/libs/mysql-connector-java-5.0.8-bin.jar')
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+
+    //PARSE.COM
+    compile 'com.parse.bolts:bolts-android:1.+'
+    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
 }
