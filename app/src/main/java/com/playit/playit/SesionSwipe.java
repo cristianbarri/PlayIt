@@ -15,12 +15,19 @@ public class SesionSwipe extends ActionBarActivity {
 
     SlidingTabLayout mSlidingTabLayout;
     ViewPager pager;
+    String info;
+    int id_user;
+    String tag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sesion_swipe);
 
+        Bundle b = getIntent().getExtras();
+        info = b.getString("infoSongs");
+        id_user = b.getInt("id_user");
+        tag = b.getString("tag");
 
         pager = (ViewPager) findViewById(R.id.pagerSesionSwipe);
         pager.setAdapter(new TabsPagerAdapter2(getSupportFragmentManager()));
@@ -52,4 +59,16 @@ public class SesionSwipe extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public String getInfoSongs(){
+        return info;
+    }
+
+    public String getIdUSer(){
+        return String.valueOf(id_user);
+    }
+    public String getTag(){
+        return tag;
+    }
+
 }

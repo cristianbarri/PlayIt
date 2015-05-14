@@ -22,4 +22,11 @@
         android:onClick="ChangeLayout"
         android:text="ChangeLayout" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:id="@+id/textView7"
+        android:layout_gravity="left|center_vertical" />
+
 </FrameLayout>

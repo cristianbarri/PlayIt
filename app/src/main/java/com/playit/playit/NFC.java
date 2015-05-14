@@ -1,8 +1,12 @@
 package com.playit.playit;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
@@ -14,12 +18,23 @@ import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.playit.playit.UtilsHTTP.CustomHttpClient;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 
 public class NFC extends ActionBarActivity {
@@ -27,50 +42,12 @@ public class NFC extends ActionBarActivity {
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
 
-    private Button b;
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
-    private String tagID = "049CDE62393780"; //ID del tag con el que permitimos entrar en session
-/*
-
-ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_nfc);
-
-
-        mTextView = (TextView) findViewById(R.id.textView_explanation);
-
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        if (mNfcAdapter == null) {
-            // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-
-        }
-
-        if (!mNfcAdapter.isEnabled()) {
-            mTextView.setText("NFC is disabled.");
-        } else {
-            mTextView.setText("NFC is enabled");
-        }
-
-        //handleIntent(getIntent());
-
-        b = (Button)findViewById(R.id.autenticar);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), SesionSwipe.class);
-                startActivity(i);
-            }
-        });
-
-    }
-*/
+    //private String tagID = "049CDE62393780"; //ID del tag con el que permitimos entrar en session
+    private int id_user;
+    private ImageView img;
+    private AnimationDrawable frameAnimation;
 
 
     //PRUEBO NFC@@@@@@@@@@@@
@@ -93,7 +70,11 @@ ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
 
+        Bundle bundle = getIntent().getExtras();
+        id_user = bundle.getInt("id_user");
+
         mTextView = (TextView) findViewById(R.id.textView_explanation);
+        mTextView.setVisibility(mTextView.GONE);
 
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
 
@@ -106,21 +87,34 @@ ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
         }
 
         if (!mNfcAdapter.isEnabled()) {
-            mTextView.setText("NFC is disabled.");
+            mTextView.setText("NFC is disabled");
+            mTextView.setVisibility(mTextView.VISIBLE);
+            img = (ImageView)findViewById(R.id.nfc);
+            img.setBackgroundResource(R.drawable.animation);
+
+            // Get the background, which has been compiled to an AnimationDrawable object.
+            frameAnimation = (AnimationDrawable) img.getBackground();
+            // Start the animation (looped playback by default).
+            frameAnimation.stop();
+
         } else {
             mTextView.setText("NFC is enabled");
+            mTextView.setVisibility(mTextView.GONE);
+
+            // Load the ImageView that will host the animation and
+            // set its background to our AnimationDrawable XML resource.
+            img = (ImageView)findViewById(R.id.nfc);
+            img.setBackgroundResource(R.drawable.animation);
+
+            // Get the background, which has been compiled to an AnimationDrawable object.
+            frameAnimation = (AnimationDrawable) img.getBackground();
+            // Start the animation (looped playback by default).
+            frameAnimation.start();
         }
 
         //handleIntent(getIntent());
 
-        b = (Button)findViewById(R.id.autenticar);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), SesionSwipe.class);
-                startActivity(i);
-            }
-        });
+
     }
 
     @Override
@@ -133,6 +127,37 @@ ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
     @Override
     protected void onResume() {
         super.onResume();
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+        mTextView.setVisibility(mTextView.GONE);
+
+
+        if (!mNfcAdapter.isEnabled()) {
+            mTextView.setText("NFC is disabled");
+            mTextView.setVisibility(mTextView.VISIBLE);
+
+            img = (ImageView)findViewById(R.id.nfc);
+            img.setBackgroundResource(R.drawable.animation);
+
+            // Get the background, which has been compiled to an AnimationDrawable object.
+            frameAnimation = (AnimationDrawable) img.getBackground();
+            // Start the animation (looped playback by default).
+            frameAnimation.stop();
+
+        } else {
+            mTextView.setText("NFC is enabled");
+            mTextView.setVisibility(mTextView.GONE);
+
+            // Load the ImageView that will host the animation and
+            // set its background to our AnimationDrawable XML resource.
+            img = (ImageView)findViewById(R.id.nfc);
+            img.setBackgroundResource(R.drawable.animation);
+
+            // Get the background, which has been compiled to an AnimationDrawable object.
+            frameAnimation = (AnimationDrawable) img.getBackground();
+            // Start the animation (looped playback by default).
+            frameAnimation.start();
+        }
         // creating pending intent:
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
         // creating intent receiver for NFC events:
@@ -156,12 +181,38 @@ ESTO LO HE INCLUIDO EL CODIGO DE PRUEBA NFC@@@@@@@@@@@@@@@@@@@
     @Override
     protected void onNewIntent(Intent intent) {
         if (intent.getAction().equals(NfcAdapter.ACTION_TAG_DISCOVERED)) {
-            ((TextView)findViewById(R.id.showNFCtext)).setText(ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)));
-            if (((TextView) findViewById(R.id.showNFCtext)).getText().toString().equals(tagID)) {
-                Intent i = new Intent(getApplicationContext(), SesionSwipe.class);
-                startActivity(i);
+
+            //((TextView)findViewById(R.id.showNFCtext)).setText(ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID)));
+            ConnectivityManager connMgr = (ConnectivityManager)
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            String response = null;
+            if (networkInfo == null || !networkInfo.isConnected()) {
+                Log.i("info", "noNetwork");
+            } else {
+                //ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                //postParameters.add(new BasicNameValuePair("tag", ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))));
+                //postParameters.add(new BasicNameValuePair("id_user",String.valueOf(id_user)));
+                String tag = "049CDE62393780";//ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
+                try {
+                    String url = "http://46.101.139.161/android/song_list?tag="+tag+"&id_user="+"7";//String.valueOf(id_user);
+                    response = CustomHttpClient.executeHttpGet(url);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (response.contains("this tag isn't valid")) {
+                    Toast.makeText(this, "This NFC TAG isn't valid", Toast.LENGTH_SHORT).show();
+                }else if (response.equals(null)){
+                //otro toast
+                }else {
+                    Intent i = new Intent(this, SesionSwipe.class);
+                    i.putExtra("infoSongs",response);
+                    i.putExtra("id_user", id_user);
+                    i.putExtra("tag", tag);
+                    startActivity(i);
+                }
             }
-            else Toast.makeText(this, "This NFC TAG isn't valid for this session.", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -1,12 +1,40 @@
 package com.playit.playit;
 
 import android.app.Activity;
+import android.app.ListActivity;
+import android.content.Context;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.playit.playit.CustomAdapter.MyCustomAdapter;
+import com.playit.playit.CustomAdapter.SongsWithVotes;
+import com.playit.playit.UtilsHTTP.CustomHttpClient;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -22,10 +50,28 @@ public class Sesion1 extends android.support.v4.app.Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private String info;
+    private String id_user;
+    private String tag;
+    public int numvotesuser;
+
+    boolean primer = true;
+
+    private View view;
+
+    private ListView lv;
+
+    private ArrayList<SongsWithVotes> songs;// = new ArrayList<SongsWithVotes>();
+
+    private MyCustomAdapter myCustomAdapter;
+
+    private TextView remaining_votes;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    //private TextView mTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,13 +104,141 @@ public class Sesion1 extends android.support.v4.app.Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sesion1, container, false);
+
+        view = inflater.inflate(R.layout.fragment_sesion1, container, false);
+        SesionSwipe activity = (SesionSwipe) getActivity();
+        info = activity.getInfoSongs();
+        id_user = activity.getIdUSer();
+        tag = activity.getTag();
+
+        //Actualiza datos
+        lv = (ListView) view.findViewById(R.id.listView);
+        songs = new ArrayList<SongsWithVotes>();
+        refresh();
+        myCustomAdapter = new MyCustomAdapter(this.getActivity(), songs);
+
+
+        if (primer == true) lv.setAdapter(myCustomAdapter);
+        primer = false;
+
+        final SwipeRefreshLayout swipeView = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+
+        //swipeView.setColorScheme(android.R.color.holo_blue_dark, android.R.color.holo_blue_light, android.R.color.holo_green_light, android.R.color.holo_green_dark);
+       // if (listIsAtTop()){
+        swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                // TODO Auto-generated method stub
+         //       if (listIsAtTop()){
+                swipeView.setRefreshing(true);
+                Log.i("Swipe", "Refreshing List");
+                refresh();
+                ( new Handler()).postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        swipeView.setRefreshing(false);
+                        //refresh();
+                    }
+                }, 3000);
+            }//}
+        });//}
+
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                boolean enable = false;
+                if(lv != null && lv.getChildCount() > 0){
+                    // check if the first item of the list is visible
+                    boolean firstItemVisible = lv.getFirstVisiblePosition() == 0;
+                    // check if the top of the first item is visible
+                    boolean topOfFirstItemVisible = lv.getChildAt(0).getTop() == 0;
+                    // enabling or disabling the refresh layout
+                    enable = firstItemVisible && topOfFirstItemVisible;
+                }
+                swipeView.setEnabled(enable);
+            }
+        });
+
+
+
+        return view;
+    }
+    private boolean listIsAtTop()   {
+        if(lv.getChildCount() == 0) return true;
+        return lv.getChildAt(0).getTop() == 0;
+    }
+
+    public void refresh(){
+        String response = null;
+        try {
+                String url = "http://46.101.139.161/android/song_list?tag="+tag+"&id_user="+String.valueOf(id_user);
+                response = CustomHttpClient.executeHttpGet(url);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+        JSONObject jObject = null;
+        try {
+            jObject = new JSONObject(response);
+            Iterator<String> iter = jObject.keys();
+            int i = 0;
+            songs.clear();
+            numvotesuser = 0;
+            while (iter.hasNext()) {
+                String key = iter.next();
+                JSONObject jar = jObject.getJSONObject(key);
+                String nom = jar.getString("nom");
+                int numvots = jar.getInt("num_vots");
+                String snumvots = String.valueOf(numvots);
+                int havotat = jar.getInt("ha_votat");
+                if (havotat > 0) ++numvotesuser;
+
+                SongsWithVotes s = new SongsWithVotes(nom, snumvots, havotat, id_user, tag, Integer.valueOf(key));
+                songs.add(i, s);
+
+
+                ++i;
+            }
+            if (primer == false) {
+                myCustomAdapter.notifyDataSetChanged();
+                //myCustomAdapter.notifyAll();
+                //myCustomAdapter.clear();
+                //myCustomAdapter.addAll(songs);
+                //myCustomAdapter.clear();
+                //myCustomAdapter.add(songs);
+                //myCustomAdapter.setmSongs(songs);
+
+            }
+            //myCustomAdapter.add(songs);
+            //myCustomAdapter.notifyDataSetChanged();
+            //lv.invalidateViews();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        // Set The Adapter
+
+
+        //myCustomAdapter.notifyDataSetChanged();
+        //lv.invalidateViews();
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -73,6 +247,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
 
     /*@Override
     public void onAttach(Activity activity) {
@@ -84,6 +259,24 @@ public class Sesion1 extends android.support.v4.app.Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }*/
+    public void myClickHandler(View v)
+    {
+
+        //get the row the clicked button is in
+        /*LinearLayout vwParentRow = (LinearLayout)v.getParent();
+
+        TextView child = (TextView)vwParentRow.getChildAt(0);
+        Button btnChild = (Button)vwParentRow.getChildAt(1);
+        btnChild.setText(child.getText());
+        btnChild.setText("I've been clicked!");
+
+
+        SongsWithVotes s = new SongsWithVotes("hola", "hoolaaaa");
+        songs.add(s);
+        lv.setAdapter(myCustomAdapter);*/
+
+    }
+
 
     @Override
     public void onDetach() {

@@ -17,6 +17,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.codec.digest.DigestUtils;
+import com.playit.playit.UtilsHTTP.BCrypt;
+
 import com.playit.playit.UtilsHTTP.CustomHttpClient;
 
 import org.apache.http.NameValuePair;
@@ -123,20 +126,22 @@ public class MainActivity extends ActionBarActivity {
             Log.i("url", url);
             HttpGet httpget = new HttpGet(url);*/
 
+
             ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
             postParameters.add(new BasicNameValuePair("name", user ));
-            postParameters.add(new BasicNameValuePair("password", pass ));
+            String sha256hex2 = DigestUtils.sha256Hex(pass);
+
+            postParameters.add(new BasicNameValuePair("password", sha256hex2));
             String response;
             try {
                 response = CustomHttpClient.executeHttpPost("http://46.101.139.161/bdapi/login.php", postParameters);
-                Log.i("response","feta");
                 JSONObject jObject = new JSONObject(response);
-                Log.i("json","creat");
-                response = jObject.getString("login");
-                Log.i("json","parsejat");
-                Log.i("response",response);
-                if (response.equals("1")) {
+                //response = jObject.getString("login");
+                int id = jObject.getInt("id");
+                if (id > 0) {
                     Intent i = new Intent(this, ProfileSwipe.class);
+                    i.putExtra("name",user);
+                    i.putExtra("id", id);
                     startActivity(i);
                 } else {
                     Toast.makeText(getApplicationContext(), "Invalid user or password", Toast.LENGTH_LONG).show();
@@ -161,12 +166,16 @@ public class MainActivity extends ActionBarActivity {
             if (user.equals("") || email.equals("") || pass.equals("") || pass2.equals("")){
                 Toast.makeText(getApplicationContext(), "Please fill in all the fields", Toast.LENGTH_LONG).show();
             } else {
+
+
                 ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                 postParameters.add(new BasicNameValuePair("name", user));
                 postParameters.add(new BasicNameValuePair("email", email));
                 Log.i("passwords:", pass + " " + pass2);
                 if (pass.equals(pass2)) {
-                    postParameters.add(new BasicNameValuePair("password", pass));
+                    String sha256hex = DigestUtils.sha256Hex(pass2);
+                    Toast.makeText(getApplicationContext(),sha256hex , Toast.LENGTH_LONG).show();
+                    postParameters.add(new BasicNameValuePair("password", sha256hex));
 
 
                     String response;
