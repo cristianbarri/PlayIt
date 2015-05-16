@@ -1,8 +1,12 @@
 package com.playit.playit;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +17,7 @@ import android.app.Fragment;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +71,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
     private MyCustomAdapter myCustomAdapter;
 
     private TextView remaining_votes;
-
+    private TextView textVotes;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -105,6 +110,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
 
@@ -114,6 +120,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
 
         view = inflater.inflate(R.layout.fragment_sesion1, container, false);
         SesionSwipe activity = (SesionSwipe) getActivity();
+
         info = activity.getInfoSongs();
         id_user = activity.getIdUSer();
         tag = activity.getTag();
@@ -125,8 +132,10 @@ public class Sesion1 extends android.support.v4.app.Fragment {
         myCustomAdapter = new MyCustomAdapter(this.getActivity(), songs);
 
 
-        if (primer == true) lv.setAdapter(myCustomAdapter);
-        primer = false;
+        if (primer == true) {
+            lv.setAdapter(myCustomAdapter);
+            primer = false;
+        }
 
         final SwipeRefreshLayout swipeView = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
 
@@ -149,7 +158,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
                         swipeView.setRefreshing(false);
                         //refresh();
                     }
-                }, 3000);
+                }, 2000);
             }//}
         });//}
 
@@ -179,10 +188,6 @@ public class Sesion1 extends android.support.v4.app.Fragment {
 
         return view;
     }
-    private boolean listIsAtTop()   {
-        if(lv.getChildCount() == 0) return true;
-        return lv.getChildAt(0).getTop() == 0;
-    }
 
     public void refresh(){
         String response = null;
@@ -200,7 +205,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
             Iterator<String> iter = jObject.keys();
             int i = 0;
             songs.clear();
-            numvotesuser = 0;
+            numvotesuser = 3;
             while (iter.hasNext()) {
                 String key = iter.next();
                 JSONObject jar = jObject.getJSONObject(key);
@@ -208,7 +213,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
                 int numvots = jar.getInt("num_vots");
                 String snumvots = String.valueOf(numvots);
                 int havotat = jar.getInt("ha_votat");
-                if (havotat > 0) ++numvotesuser;
+                if (havotat > 0) --numvotesuser;
 
                 SongsWithVotes s = new SongsWithVotes(nom, snumvots, havotat, id_user, tag, Integer.valueOf(key));
                 songs.add(i, s);
@@ -216,19 +221,10 @@ public class Sesion1 extends android.support.v4.app.Fragment {
 
                 ++i;
             }
-            if (primer == false) {
-                myCustomAdapter.notifyDataSetChanged();
-                //myCustomAdapter.notifyAll();
-                //myCustomAdapter.clear();
-                //myCustomAdapter.addAll(songs);
-                //myCustomAdapter.clear();
-                //myCustomAdapter.add(songs);
-                //myCustomAdapter.setmSongs(songs);
+            if (!primer) myCustomAdapter.notifyDataSetChanged();
 
-            }
-            //myCustomAdapter.add(songs);
-            //myCustomAdapter.notifyDataSetChanged();
-            //lv.invalidateViews();
+            textVotes = (TextView) view.findViewById(R.id.textView9);
+            textVotes.setText(Integer.toString(numvotesuser));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -259,24 +255,6 @@ public class Sesion1 extends android.support.v4.app.Fragment {
                     + " must implement OnFragmentInteractionListener");
         }
     }*/
-    public void myClickHandler(View v)
-    {
-
-        //get the row the clicked button is in
-        /*LinearLayout vwParentRow = (LinearLayout)v.getParent();
-
-        TextView child = (TextView)vwParentRow.getChildAt(0);
-        Button btnChild = (Button)vwParentRow.getChildAt(1);
-        btnChild.setText(child.getText());
-        btnChild.setText("I've been clicked!");
-
-
-        SongsWithVotes s = new SongsWithVotes("hola", "hoolaaaa");
-        songs.add(s);
-        lv.setAdapter(myCustomAdapter);*/
-
-    }
-
 
     @Override
     public void onDetach() {

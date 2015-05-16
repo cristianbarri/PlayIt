@@ -1,5 +1,7 @@
 package com.playit.playit;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -29,6 +31,31 @@ public class ProfileSwipe extends ActionBarActivity {
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabsProfileSwipe);
         mSlidingTabLayout.setViewPager(pager);
 
+    }
+
+    @Override public void onBackPressed() {
+
+        Log.i("oh", " si");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose wisely!");
+        builder.setMessage("Do you wish to log out?");
+// Add the buttons
+        builder.setPositiveButton("Only Exit", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked OK button
+            }
+        });
+        builder.setNegativeButton("Log out", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+// Set other dialog properties
+
+
+// Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     String getName(){

@@ -193,9 +193,9 @@ public class NFC extends ActionBarActivity {
                 //ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                 //postParameters.add(new BasicNameValuePair("tag", ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID))));
                 //postParameters.add(new BasicNameValuePair("id_user",String.valueOf(id_user)));
-                String tag = "049CDE62393780";//ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
+                String tag = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
                 try {
-                    String url = "http://46.101.139.161/android/song_list?tag="+tag+"&id_user="+"7";//String.valueOf(id_user);
+                    String url = "http://46.101.139.161/android/song_list?tag="+tag+"&id_user="+String.valueOf(id_user);
                     response = CustomHttpClient.executeHttpGet(url);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -211,6 +211,7 @@ public class NFC extends ActionBarActivity {
                     i.putExtra("id_user", id_user);
                     i.putExtra("tag", tag);
                     startActivity(i);
+                    finish();
                 }
             }
         }

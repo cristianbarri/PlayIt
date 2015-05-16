@@ -1,5 +1,6 @@
 package com.playit.playit;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.parse.codec.digest.DigestUtils;
 import com.playit.playit.UtilsHTTP.BCrypt;
 
+import com.playit.playit.UtilsHTTP.BCryptTest;
 import com.playit.playit.UtilsHTTP.CustomHttpClient;
 
 import org.apache.http.NameValuePair;
@@ -29,6 +32,10 @@ import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 //importar para parse.com
 
@@ -46,6 +53,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+/*
+        try {
+            BCryptTest.multiThreadReproductibleHash();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+*/
 
         StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_main);
@@ -56,7 +70,41 @@ public class MainActivity extends ActionBarActivity {
         edit_email = (EditText)findViewById(R.id.editText3);
         text_email = (TextView)findViewById(R.id.textView6);
         text_passconf = (TextView)findViewById(R.id.textView5);
+        user.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
 
+        pass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        edit_passconf.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        edit_email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
 
         //Invisibles las cosas para SIGNUP
         edit_passconf.setVisibility(View.GONE);
@@ -69,9 +117,10 @@ public class MainActivity extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!showSignUp)
+                if (!showSignUp) {
                     doLogin(user.getText().toString(), pass.getText().toString());
-
+                    //Log.i("password in clar", pass.getText().toString());
+                }
                 else {
                     //Oculto los campos
                     edit_passconf.setVisibility(View.GONE);
@@ -120,39 +169,36 @@ public class MainActivity extends ActionBarActivity {
             Log.i("info", "noNetwork");
         } else {
             HttpClient httpclient = new DefaultHttpClient();
-
-            // Prepare a request object
-            /*String url = "http://www.marcfernandezantolin.com/test.php?name=" + user + "&password=" + pass;
-            Log.i("url", url);
-            HttpGet httpget = new HttpGet(url);*/
-
-
             ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
             postParameters.add(new BasicNameValuePair("name", user ));
-            String sha256hex2 = DigestUtils.sha256Hex(pass);
-
-            postParameters.add(new BasicNameValuePair("password", sha256hex2));
+            postParameters.add(new BasicNameValuePair("password", pass));
             String response;
+            int id = 0;
             try {
-                response = CustomHttpClient.executeHttpPost("http://46.101.139.161/bdapi/login.php", postParameters);
-                JSONObject jObject = new JSONObject(response);
-                //response = jObject.getString("login");
-                int id = jObject.getInt("id");
-                if (id > 0) {
-                    Intent i = new Intent(this, ProfileSwipe.class);
-                    i.putExtra("name",user);
-                    i.putExtra("id", id);
-                    startActivity(i);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Invalid user or password", Toast.LENGTH_LONG).show();
+                response = CustomHttpClient.executeHttpGet("http://46.101.139.161/android/validate_user?name=" + user + "&password=" + pass);
+                if (response.contains("no user")){
+                    Toast.makeText(getApplicationContext(), "Invalid user", Toast.LENGTH_LONG).show();
+                }else if (response.contains("wrong password")){
+                    Toast.makeText(getApplicationContext(), "Invalid password", Toast.LENGTH_LONG).show();
+                }else {
+                    JSONObject jObject = new JSONObject(response);
+                    id = jObject.getInt("id");
+                    if (id > 0) {
+                        Intent i = new Intent(this, ProfileSwipe.class);
+                        i.putExtra("name", user);
+                        i.putExtra("id", id);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Something went wrong, please try again later", Toast.LENGTH_LONG).show();
+                    }
                 }
             } catch (Exception e) {
-                Log.i("peta", "merdaca");
+                Toast.makeText(getApplicationContext(), "Something went wrong, please try again later", Toast.LENGTH_LONG).show();
             }
-
-
         }
     }
+
+
 
 
     protected void doSignup(String user, String email, String pass, String pass2) {
@@ -168,19 +214,16 @@ public class MainActivity extends ActionBarActivity {
             } else {
 
 
-                ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+                /*ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
                 postParameters.add(new BasicNameValuePair("name", user));
-                postParameters.add(new BasicNameValuePair("email", email));
-                Log.i("passwords:", pass + " " + pass2);
+                postParameters.add(new BasicNameValuePair("email", email));*/
+
                 if (pass.equals(pass2)) {
-                    String sha256hex = DigestUtils.sha256Hex(pass2);
-                    Toast.makeText(getApplicationContext(),sha256hex , Toast.LENGTH_LONG).show();
-                    postParameters.add(new BasicNameValuePair("password", sha256hex));
 
 
                     String response;
                     try {
-                        response = CustomHttpClient.executeHttpPost("http://46.101.139.161/bdapi/signup.php", postParameters);
+                        response = CustomHttpClient.executeHttpGet("http://46.101.139.161/android/store_user?name="+user+"&password="+pass+"&email="+email);
 
                         if (!response.contains("user already exists") && !response.contains("0")) {
                             //Ya estoy totalmente registrado pues escondo los campos
@@ -229,6 +272,11 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
 

@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.playit.playit.UtilsHTTP.CustomHttpClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,12 +89,45 @@ public class Profile1 extends android.support.v4.app.Fragment {
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
 
-                Intent i = new Intent(getActivity(), NFC.class);
-                i.putExtra("id_user", id);
-                startActivity(i);
+                String response = null;
+                try {
+                    String url = "http://46.101.139.161/android/last_tag.php?id_user=" + String.valueOf(id);
+                    response = CustomHttpClient.executeHttpGet(url);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                if (response.contains("expired")) {
+                    Intent i = new Intent(getActivity(), NFC.class);
+                    i.putExtra("id_user", id);
+                    startActivity(i);
+                } else {
+                    String tag = null;
+                    JSONObject jObject = null;
+                    try {
+                        jObject = new JSONObject(response);
+                        tag = jObject.getString("tag");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    tag= "049CDE62393780";
+
+                    String response1 = null;
+                    try {
+                        String url = "http://46.101.139.161/android/song_list?tag=" + tag + "&id_user=" + String.valueOf(id);
+                        response1 = CustomHttpClient.executeHttpGet(url);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    Intent in = new Intent(getActivity(), SesionSwipe.class);
+                    in.putExtra("infoSongs", response1);
+                    in.putExtra("id_user", id);
+                    in.putExtra("tag", tag);
+                    startActivity(in);
+                }
+
             }
         });
 

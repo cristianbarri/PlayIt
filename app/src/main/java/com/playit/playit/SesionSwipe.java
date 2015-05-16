@@ -1,5 +1,10 @@
 package com.playit.playit;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.content.DialogInterface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -35,7 +40,6 @@ public class SesionSwipe extends ActionBarActivity {
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.tabsSesionSwipe);
         mSlidingTabLayout.setViewPager(pager);
     }
-
 
 
     @Override

@@ -26,14 +26,14 @@
                 android:textAppearance="?android:attr/textAppearanceListItemSmall"
                 android:gravity="center_vertical"
                 android:minHeight="?android:attr/listPreferredItemHeightSmall"
-                android:textColor="#ff000000" />
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="New Button"
                 android:id="@+id/button2"
-                android:background="#ff3eff16"
+                android:background="#2ECC71"
                 android:textStyle="bold"/>
         </LinearLayout>
 
