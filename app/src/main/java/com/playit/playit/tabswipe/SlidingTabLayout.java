@@ -210,6 +210,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
                         false);
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
+
             }
 
             if (tabView == null) {

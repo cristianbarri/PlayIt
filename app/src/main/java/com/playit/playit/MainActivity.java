@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -53,6 +54,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 /*
         try {
             BCryptTest.multiThreadReproductibleHash();
@@ -73,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         user.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && !pass.hasFocus() && !edit_passconf.hasFocus() && !edit_email.hasFocus()) {
                     hideKeyboard(v);
                 }
             }
@@ -82,7 +85,7 @@ public class MainActivity extends ActionBarActivity {
         pass.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && !user.hasFocus() && !edit_passconf.hasFocus() && !edit_email.hasFocus()) {
                     hideKeyboard(v);
                 }
             }
@@ -91,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
         edit_passconf.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && !pass.hasFocus() && !user.hasFocus() && !edit_email.hasFocus()) {
                     hideKeyboard(v);
                 }
             }
@@ -100,7 +103,7 @@ public class MainActivity extends ActionBarActivity {
         edit_email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
+                if (!hasFocus && !pass.hasFocus() && !edit_passconf.hasFocus() && !user.hasFocus()) {
                     hideKeyboard(v);
                 }
             }
@@ -183,11 +186,14 @@ public class MainActivity extends ActionBarActivity {
                 }else {
                     JSONObject jObject = new JSONObject(response);
                     id = jObject.getInt("id");
+                    String img_path = jObject.getString("img_path");
                     if (id > 0) {
                         Intent i = new Intent(this, ProfileSwipe.class);
                         i.putExtra("name", user);
                         i.putExtra("id", id);
+                        i.putExtra("img_path", img_path);
                         startActivity(i);
+                        finish();
                     } else {
                         Toast.makeText(getApplicationContext(), "Something went wrong, please try again later", Toast.LENGTH_LONG).show();
                     }

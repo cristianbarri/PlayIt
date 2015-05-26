@@ -17,7 +17,7 @@ import com.playit.playit.Stats2;
 
 public class TabsPagerAdapter2 extends FragmentStatePagerAdapter {
 
-    private String[] titles = {"Sesion", "Sesion2", "Sesion3" };
+    private String[] titles = {"Session", "DJ Profile", "Session3" };
 
     public TabsPagerAdapter2(FragmentManager fm) {
         super(fm);

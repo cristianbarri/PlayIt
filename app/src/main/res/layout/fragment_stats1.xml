@@ -1,6 +1,11 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.playit.playit.Stats1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    android:gravity="center"
+    tools:context="com.playit.playit.Stats1">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -14,4 +19,4 @@
         android:text="STATS1"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-</FrameLayout>
+</LinearLayout>

@@ -1,7 +1,9 @@
 package com.playit.playit;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.AnimationDrawable;
@@ -16,6 +18,7 @@ import android.nfc.tech.NfcA;
 import android.nfc.tech.NfcB;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,7 +52,6 @@ public class NFC extends ActionBarActivity {
     private ImageView img;
     private AnimationDrawable frameAnimation;
 
-
     //PRUEBO NFC@@@@@@@@@@@@
 
     // list of NFC technologies detected:
@@ -69,6 +71,8 @@ public class NFC extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
 
         Bundle bundle = getIntent().getExtras();
         id_user = bundle.getInt("id_user");
@@ -89,6 +93,33 @@ public class NFC extends ActionBarActivity {
         if (!mNfcAdapter.isEnabled()) {
             mTextView.setText("NFC is disabled");
             mTextView.setVisibility(mTextView.VISIBLE);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Choose wisely!");
+            builder.setMessage("Do you wish to activate NFC?");
+// Add the buttons
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                    dialog.dismiss();
+                    startActivity(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS));
+
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+
+                }
+            });
+
+// Set other dialog properties
+
+
+// Create the AlertDialog
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
             img = (ImageView)findViewById(R.id.nfc);
             img.setBackgroundResource(R.drawable.animation);
 
@@ -136,6 +167,7 @@ public class NFC extends ActionBarActivity {
             mTextView.setText("NFC is disabled");
             mTextView.setVisibility(mTextView.VISIBLE);
 
+
             img = (ImageView)findViewById(R.id.nfc);
             img.setBackgroundResource(R.drawable.animation);
 
@@ -168,6 +200,7 @@ public class NFC extends ActionBarActivity {
         // enabling foreground dispatch for getting intent from NFC event:
         NfcAdapter nfcAdapter = NfcAdapter.getDefaultAdapter(this);
         nfcAdapter.enableForegroundDispatch(this, pendingIntent, new IntentFilter[]{filter}, this.techList);
+
     }
 
     @Override

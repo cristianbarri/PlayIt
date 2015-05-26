@@ -101,7 +101,7 @@ public class MyCustomAdapter extends ArrayAdapter {
                         button_vote.setText(mSongs.get(position).votes);
                         button_vote.setBackgroundColor(Color.parseColor("#F22613"));
                         button_vote.setEnabled(false);
-                        //button_vote.setTextColor(Color.parseColor("#000000"));
+                        button_vote.setTextColor(Color.parseColor("#000000"));
 
                         TextView textVotes;
                         textVotes = (TextView) ((Activity)mContext).findViewById(R.id.textView9);

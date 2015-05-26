@@ -25,6 +25,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -125,6 +126,8 @@ public class Sesion1 extends android.support.v4.app.Fragment {
         id_user = activity.getIdUSer();
         tag = activity.getTag();
 
+
+
         //Actualiza datos
         lv = (ListView) view.findViewById(R.id.listView);
         songs = new ArrayList<SongsWithVotes>();
@@ -158,7 +161,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
                         swipeView.setRefreshing(false);
                         //refresh();
                     }
-                }, 2000);
+                }, 1000);
             }//}
         });//}
 
@@ -205,7 +208,7 @@ public class Sesion1 extends android.support.v4.app.Fragment {
             Iterator<String> iter = jObject.keys();
             int i = 0;
             songs.clear();
-            numvotesuser = 3;
+            numvotesuser = 10;
             while (iter.hasNext()) {
                 String key = iter.next();
                 JSONObject jar = jObject.getJSONObject(key);
