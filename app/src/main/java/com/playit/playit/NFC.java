@@ -228,7 +228,7 @@ public class NFC extends ActionBarActivity {
                 //postParameters.add(new BasicNameValuePair("id_user",String.valueOf(id_user)));
                 String tag = ByteArrayToHexString(intent.getByteArrayExtra(NfcAdapter.EXTRA_ID));
                 try {
-                    String url = "http://46.101.139.161/android/song_list?tag="+"049CDE62393780"+"&id_user="+String.valueOf(id_user);
+                    String url = "http://46.101.139.161/android/song_list?tag="+tag+"&id_user="+String.valueOf(id_user);
                     response = CustomHttpClient.executeHttpGet(url);
                 } catch (Exception e) {
                     e.printStackTrace();
