@@ -47,7 +47,7 @@ public class NFC extends ActionBarActivity {
 
     private TextView mTextView;
     private NfcAdapter mNfcAdapter;
-    //private String tagID = "049CDE62393780"; //ID del tag con el que permitimos entrar en session 
+    //private String tagID = "049CDE62393780"; //ID del tag con el que permitimos entrar en session
     private int id_user;
     private ImageView img;
     private AnimationDrawable frameAnimation;
