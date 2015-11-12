@@ -52,7 +52,7 @@ public class NFC extends ActionBarActivity {
     private ImageView img;
     private AnimationDrawable frameAnimation;
 
-    //PRUEBO NFC@@@@@@@@@@@@
+    //PRUEBO NFC@@@@@@@@@@@@@
 
     // list of NFC technologies detected:
     private final String[][] techList = new String[][] {
